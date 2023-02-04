@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  assembly:
+    build: ./assembly
+    ports:
+      - "8000:5000"
+    volumes:
+      - ./assembly/:/assembly-code
+  back:
+    build: ./back
+    ports:
+      - "8080:5001"
+    volumes:
+      - ./back/:/back-code
+  front:
+    build: ./front
+    ports:
+      - "3333:3333"
+    volumes:
+      - ./front/:/front-code
+      # dirty hack to get node_modules to show up after volumes are mounted
+      # (npm install happens in container build, then compose mounts the volume,
+      # which hides the contents of the internal mount point).
+      - /front-code/node_modules
+  redis:
+    image: "redis:alpine"
+
